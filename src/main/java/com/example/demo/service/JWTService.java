@@ -19,7 +19,6 @@ public class JWTService {
     public String createJWT(String email) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", email);
-        // Add any additional claims you want to include
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -39,6 +38,17 @@ public class JWTService {
             return true;
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    public String getEmailFromJWT(String token) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(SECRET_KEY)
+                    .build()
+                    .parseClaimsJws(token).getBody().get("email",String.class);
+        } catch (Exception e) {
+            return null;
         }
     }
 }

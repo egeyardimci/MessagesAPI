@@ -19,11 +19,16 @@ public class AuthService {
     UserRepository userRepository;
 
     public void registerUser(String name, String lastname, String email, String password){
-        userRepository.registerUser(name,lastname,email,password);
+        userRepository.save(new User(name,lastname,email,password));
     }
 
     public Boolean validateUser(String email, String password){
-        return userRepository.validateUser(email,password);
+        User user = userRepository.findByEmail(email);
+        if(user != null) {
+            System.out.println(user.getId());
+            return Objects.equals(user.getPassword(), password);
+        }
+        else return false;
     }
 
 }

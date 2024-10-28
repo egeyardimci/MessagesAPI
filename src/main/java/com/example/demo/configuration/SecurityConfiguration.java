@@ -27,7 +27,8 @@ public class SecurityConfiguration {
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/login").permitAll()  // Public endpoint
                     .requestMatchers("/register").permitAll()  // Public endpoint
-                    .requestMatchers("/messages/**").authenticated() // Secure endpoint
+                    .requestMatchers("/messages/**").authenticated()
+                    .requestMatchers("/friends/**").authenticated()// Secure endpoint
                     .anyRequest().authenticated() // Any other request requires authentication
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter

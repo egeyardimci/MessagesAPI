@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.model.User;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,4 +13,5 @@ import java.util.Objects;
 public interface UserRepository extends MongoRepository<User, String> {
 
     User findByEmail(String email);
+    User findById(ObjectId id);
 }

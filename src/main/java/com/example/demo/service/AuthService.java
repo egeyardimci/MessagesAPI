@@ -1,14 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.model.User;
-
-import java.security.Key;
 import java.util.*;
 
 import com.example.demo.repository.UserRepository;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

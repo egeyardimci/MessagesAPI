@@ -1,11 +1,10 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.LoginRequest;
-import com.example.demo.dto.LoginResponse;
-import com.example.demo.dto.RegisterRequest;
+import com.example.demo.dto.auth.LoginRequest;
+import com.example.demo.dto.auth.LoginResponse;
+import com.example.demo.dto.auth.RegisterRequest;
 import com.example.demo.service.AuthService;
 import com.example.demo.service.JWTService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,25 +23,28 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest)
     {
-        authService.registerUser(
+        if(authService.registerUser(
                 registerRequest.name(),
                 registerRequest.lastname(),
                 registerRequest.email(),
-                registerRequest.password());
-
-        return ResponseEntity.ok().build();
+                registerRequest.password())){
+            return ResponseEntity.ok().build();
+        }
+        else{
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
 
         if (!authService.validateUser(loginRequest.email(), loginRequest.password())) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Invalid credentials"));
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid credentials"));
         }
-
+        else{
         String token = jwtService.createJWT(loginRequest.email());
         return ResponseEntity.ok(new LoginResponse(token));
+        }
     }
 
 }

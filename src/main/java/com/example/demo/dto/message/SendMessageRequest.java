@@ -1,6 +1,4 @@
-package com.example.demo.dto;
-
-import org.bson.types.ObjectId;
+package com.example.demo.dto.message;
 
 public record SendMessageRequest(
         String content,

@@ -2,6 +2,7 @@ package com.example.demo.security;
 
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.JWTService;
+import com.example.demo.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,10 +22,10 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
+    @Autowired
     private final JWTService jwtService;
     @Autowired
-    private final UserRepository userRepository;
-
+    private final UserService userService;
 
     @Override
     protected void doFilterInternal(
@@ -48,7 +49,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 if (jwtService.isTokenValid(jwt)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userRepository.findByEmail(userEmail),
+                            userService.findByEmail(userEmail),
                             null,
                             Collections.emptyList()
                     );

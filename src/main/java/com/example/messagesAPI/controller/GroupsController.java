@@ -1,7 +1,7 @@
 package com.example.messagesAPI.controller;
 
 import com.example.messagesAPI.dto.ErrorResponse;
-import com.example.messagesAPI.dto.SucessResponse;
+import com.example.messagesAPI.dto.SuccessResponse;
 import com.example.messagesAPI.dto.group.*;
 import com.example.messagesAPI.model.Message;
 import com.example.messagesAPI.service.GroupsService;
@@ -36,7 +36,7 @@ public class GroupsController {
     public ResponseEntity<?> addMember(@PathVariable("groupId") ObjectId groupId, @RequestBody AddMemberRequest addMemberRequest)
     {
         if(groupsService.addMemberToGroup(groupId,addMemberRequest.email())){
-            return ResponseEntity.ok(new SucessResponse("User added to group!"));
+            return ResponseEntity.ok(new SuccessResponse("User added to group!"));
         }
         return ResponseEntity.badRequest().body(new ErrorResponse("Failed to add user to group!"));
     }
@@ -45,7 +45,7 @@ public class GroupsController {
     public ResponseEntity<?> sendMessage(@PathVariable("groupId") ObjectId groupId, @RequestBody SendGroupMessageRequest sendGroupMessageRequest)
     {
         if(messagesService.sendMessageToGroup(sendGroupMessageRequest.content(),groupId)){
-            return ResponseEntity.ok(new SucessResponse("Message successfully sent to the group!"));
+            return ResponseEntity.ok(new SuccessResponse("Message successfully sent to the group!"));
         }
         return ResponseEntity.badRequest().body(new ErrorResponse("Failed to send message to group!"));
     }

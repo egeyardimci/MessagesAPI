@@ -1,7 +1,7 @@
 package com.example.messagesAPI.controller;
 
 import com.example.messagesAPI.dto.ErrorResponse;
-import com.example.messagesAPI.dto.SucessResponse;
+import com.example.messagesAPI.dto.SuccessResponse;
 import com.example.messagesAPI.dto.auth.LoginRequest;
 import com.example.messagesAPI.dto.auth.LoginResponse;
 import com.example.messagesAPI.dto.auth.RegisterRequest;
@@ -28,7 +28,7 @@ public class AuthController {
                 registerRequest.lastname(),
                 registerRequest.email(),
                 registerRequest.password())){
-            return ResponseEntity.ok(new SucessResponse("User created successfully!"));
+            return ResponseEntity.ok(new SuccessResponse("User created successfully!"));
         }
         else{
             return ResponseEntity.badRequest().body(new ErrorResponse("Failed to create user!"));

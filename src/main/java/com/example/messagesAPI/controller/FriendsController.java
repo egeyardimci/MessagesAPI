@@ -1,7 +1,7 @@
 package com.example.messagesAPI.controller;
 
 import com.example.messagesAPI.dto.ErrorResponse;
-import com.example.messagesAPI.dto.SucessResponse;
+import com.example.messagesAPI.dto.SuccessResponse;
 import com.example.messagesAPI.dto.friend.AcceptFriendRequest;
 import com.example.messagesAPI.dto.friend.AddFriendRequest;
 import com.example.messagesAPI.dto.friend.GetFriendsResponse;
@@ -25,7 +25,7 @@ public class FriendsController {
     public ResponseEntity<?> addFriend(@RequestBody AddFriendRequest addFriendRequest)
     {
         if(friendsService.addFriend(addFriendRequest.email())){
-            return ResponseEntity.ok(new SucessResponse("Friend request sent!"));
+            return ResponseEntity.ok(new SuccessResponse("Friend request sent!"));
         }
         return ResponseEntity.badRequest().body(new ErrorResponse("Failed to send friend request!"));
     }
@@ -34,7 +34,7 @@ public class FriendsController {
     public ResponseEntity<?> acceptFriend(@RequestBody AcceptFriendRequest acceptFriendRequest)
     {
         if(friendsService.acceptFriendRequest(acceptFriendRequest.email())){
-            return ResponseEntity.ok(new SucessResponse("Friend request accepted!"));
+            return ResponseEntity.ok(new SuccessResponse("Friend request accepted!"));
         }
         return ResponseEntity.badRequest().body(new ErrorResponse("Failed to accept friend request!"));
     }

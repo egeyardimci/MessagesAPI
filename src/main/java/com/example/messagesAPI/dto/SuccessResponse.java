@@ -1,6 +1,6 @@
 package com.example.messagesAPI.dto;
 
-public record SucessResponse(
+public record SuccessResponse(
         String message
 ) {
 }

@@ -10,4 +10,5 @@ import java.util.List;
 @Service
 public interface MessagesRepository extends MongoRepository<Message, ObjectId> {
     List<Message> findBySenderOrReceiver(ObjectId sender, ObjectId receiver);
+    List<Message> findByReceiver(ObjectId receiver);
 }

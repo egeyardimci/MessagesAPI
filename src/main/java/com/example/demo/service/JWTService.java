@@ -29,18 +29,6 @@ public class JWTService {
                 .compact();
     }
 
-    public boolean validateJWT(String token) {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(SECRET_KEY)
-                    .build()
-                    .parseClaimsJws(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     public String getEmailFromJWT(String token) {
         try {
             return Jwts.parserBuilder()
@@ -53,6 +41,18 @@ public class JWTService {
     }
 
     public boolean isTokenValid(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(SECRET_KEY)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean validateJWT(String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(SECRET_KEY)

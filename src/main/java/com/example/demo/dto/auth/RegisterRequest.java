@@ -1,6 +1,4 @@
-package com.example.demo.dto;
-
-import org.springframework.web.bind.annotation.RequestBody;
+package com.example.demo.dto.auth;
 
 public record RegisterRequest(
         String name,

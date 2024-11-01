@@ -43,8 +43,10 @@ public class GroupsService {
         try {
             Group group = groupsRepository.findById(groupId);
             User userToAdd = userService.findByEmail(email);
+
             if(userToAdd != null){
                 group.getMembers().add(userToAdd.getId());
+                groupsRepository.save(group);
                 return true;
             }
         }

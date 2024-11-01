@@ -39,4 +39,4 @@
 | `/groups/:groupId/send`       | `{ "content": "message" }`                                                                 |
 | `/groups/:groupId/messages`   | `-`                                                                                        |
 | `/groups/:groupId/members`    | `-`                                                                                        |
-| `/groups/:groupId/add-member` | `{ "email": "mail3" }`                                                                     |
+| `/groups/:groupId/add-member` | `{ "email": "mail@mail.com" }`                                                                     |

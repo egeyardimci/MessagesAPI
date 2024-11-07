@@ -53,12 +53,9 @@ public class MessagesService {
         User user = authService.getAuthenticatedUser();
         User receiverUser = userService.findByEmail(receiver);
 
-        System.out.println(receiverUser.getEmail());
-
         if ((user != null) && (receiverUser != null)) {
             ObjectId receiverId = receiverUser.getId();
             if (user.getFriends().contains(receiverId)) {
-                System.out.println("inbaba");
                 try {
                     messagesRepository.save(new Message(
                             message,

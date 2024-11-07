@@ -3,6 +3,59 @@ plugins {
 	id 'org.springframework.boot' version '3.3.5'
 	id 'io.spring.dependency-management' version '1.1.6'
 	id "io.freefair.lombok" version "8.10.2"
+	id 'jacoco'
+}
+
+jacoco {
+	toolVersion = "0.8.11"
+}
+
+test {
+	testLogging {
+		events "passed", "skipped", "failed"  // Logs passed, skipped, and failed tests
+		exceptionFormat "full"  // Shows full exception stack traces
+		showStandardStreams = false  // Shows standard output and error streams in the console
+		useJUnitPlatform()  // Ensure you're using JUnit 5, if applicable
+		finalizedBy jacocoTestReport  // Generate report after tests run
+	}
+}
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.required = true
+		csv.required = false
+		html.required = true
+		html.outputLocation = layout.buildDirectory.dir('reports/jacoco')
+	}
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.8
+			}
+		}
+
+		rule {
+			enabled = false
+			element = 'CLASS'
+			includes = ['com.example.*']
+
+			limit {
+				counter = 'LINE'
+				value = 'COVEREDRATIO'
+				minimum = 0.8
+			}
+
+			limit {
+				counter = 'BRANCH'
+				value = 'COVEREDRATIO'
+				minimum = 0.8
+			}
+		}
+	}
 }
 
 group = 'com.example'

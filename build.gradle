@@ -12,12 +12,36 @@ jacoco {
 
 test {
 	testLogging {
-		events "passed", "skipped", "failed"  // Logs passed, skipped, and failed tests
-		exceptionFormat "full"  // Shows full exception stack traces
-		showStandardStreams = false  // Shows standard output and error streams in the console
-		useJUnitPlatform()  // Ensure you're using JUnit 5, if applicable
-		finalizedBy jacocoTestReport  // Generate report after tests run
+		events "passed", "skipped", "failed"
+		exceptionFormat "full"
+		showStandardStreams = false
+
+		// Add timing information
+		showExceptions true
+		showCauses true
+		showStackTraces true
+		displayGranularity = 2
+
+		afterTest { desc, result ->
+			def time = (result.endTime - result.startTime) / 1000
+			logger.lifecycle("\n${desc.name} took ${time} seconds")
+		}
+
+		afterSuite { desc, result ->
+			if (!desc.parent) { // will match the outermost suite
+				def output = "Results: ${result.resultType} " +
+						"(${result.testCount} tests, " +
+						"${result.successfulTestCount} passed, " +
+						"${result.failedTestCount} failed, " +
+						"${result.skippedTestCount} skipped) " +
+						"in ${(result.endTime - result.startTime) / 1000} seconds"
+				println '\n' + output + '\n'
+			}
+		}
 	}
+
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport
 }
 
 jacocoTestReport {
@@ -76,6 +100,20 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// JUnit 5 (Jupiter) dependencies
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+
+	// Testcontainers core dependency
+	testImplementation 'org.testcontainers:testcontainers:1.19.0'
+
+	// Testcontainers JUnit Jupiter integration
+	testImplementation 'org.testcontainers:junit-jupiter:1.19.0'
+
+	// MongoDB Testcontainers dependency
+	testImplementation 'org.testcontainers:mongodb:1.19.0'
+
 	compileOnly 'org.projectlombok:lombok:1.18.34'
 	annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
@@ -85,6 +123,9 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	implementation "org.springframework.boot:spring-boot-starter-security"
+
+	testImplementation 'org.testcontainers:testcontainers:1.19.0'
+	testImplementation 'org.testcontainers:mongodb:1.19.0'
 
 
 }

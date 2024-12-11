@@ -28,6 +28,7 @@ public class SecurityConfiguration {
                     .requestMatchers("/login").permitAll()  // Public endpoint
                     .requestMatchers("/register").permitAll()  // Public endpoint
                     .requestMatchers("/messages/**").authenticated()
+                    .requestMatchers("/user/**").authenticated()
                     .requestMatchers("/groups/**").authenticated()
                     .requestMatchers("/friends/**").authenticated()// Secure endpoint
                     .anyRequest().authenticated() // Any other request requires authentication

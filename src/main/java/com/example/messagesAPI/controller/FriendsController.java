@@ -5,6 +5,7 @@ import com.example.messagesAPI.dto.SuccessResponse;
 import com.example.messagesAPI.dto.friend.AcceptFriendRequest;
 import com.example.messagesAPI.dto.friend.AddFriendRequest;
 import com.example.messagesAPI.dto.friend.GetFriendsResponse;
+import com.example.messagesAPI.dto.user.UserInfoResponse;
 import com.example.messagesAPI.service.FriendsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,10 +42,20 @@ public class FriendsController {
 
     @GetMapping("/friends")
     public ResponseEntity<?> getFriends() {
-        List<String> friends = friendsService.getFriends();
+        List<UserInfoResponse> friends = friendsService.getFriends();
 
         if(friends != null){
-            return ResponseEntity.ok(new GetFriendsResponse(friends));
+            return ResponseEntity.ok(friends);
+        }
+        return ResponseEntity.badRequest().body(new ErrorResponse("Failed to get friends!"));
+    }
+
+    @GetMapping("/friends/requests")
+    public ResponseEntity<?> getFriendRequests() {
+        List<UserInfoResponse> friends = friendsService.getFriendRequests();
+
+        if(friends != null){
+            return ResponseEntity.ok(friends);
         }
         return ResponseEntity.badRequest().body(new ErrorResponse("Failed to get friends!"));
     }

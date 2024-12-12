@@ -34,7 +34,7 @@ public class MessagesController {
         return ResponseEntity.badRequest().body(new ErrorResponse("Failed retrieve messages!"));
     }
 
-    @GetMapping("/messages/get")
+    @PostMapping("/messages/get")
     public ResponseEntity<?> getMessages(@RequestBody GetMessageRequest getMessageRequest)
     {
         ObjectId participantId = new ObjectId(getMessageRequest.participant());

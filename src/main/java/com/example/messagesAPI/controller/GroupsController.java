@@ -3,6 +3,7 @@ package com.example.messagesAPI.controller;
 import com.example.messagesAPI.dto.ErrorResponse;
 import com.example.messagesAPI.dto.SuccessResponse;
 import com.example.messagesAPI.dto.group.*;
+import com.example.messagesAPI.dto.user.UserInfoResponse;
 import com.example.messagesAPI.model.Message;
 import com.example.messagesAPI.service.GroupsService;
 import com.example.messagesAPI.service.MessagesService;
@@ -64,7 +65,7 @@ public class GroupsController {
     @GetMapping("/groups/{groupId}/members")
     public ResponseEntity<?> getMembers(@PathVariable("groupId") ObjectId groupId)
     {
-        List<String> groupMembers = groupsService.getMembersOfGroup(groupId);
+        List<UserInfoResponse> groupMembers = groupsService.getMembersOfGroup(groupId);
 
         if(groupMembers != null){
             return ResponseEntity.ok(new GetGroupMembersResponse(groupMembers));

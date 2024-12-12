@@ -107,7 +107,6 @@ public class MessagesService {
     public List<UniqueChats> getUniqueChatsWithDetails() {
         User user = authService.getAuthenticatedUser();
 
-        System.out.println("asd1");
         List<Message> nonGroupMessages = messagesRepository.findBySenderAndIsGroupMessageFalseOrReceiverAndIsGroupMessageFalse(user.getId(),user.getId());
 
         // Create a map to store the last message for each chat pair

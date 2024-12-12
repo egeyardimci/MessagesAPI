@@ -1,5 +1,6 @@
 package com.example.messagesAPI.service;
 
+import com.example.messagesAPI.dto.user.UserInfoResponse;
 import com.example.messagesAPI.model.Group;
 import com.example.messagesAPI.model.Message;
 import com.example.messagesAPI.model.User;
@@ -60,17 +61,17 @@ public class GroupsService {
         return false;
     }
 
-    public List<String> getMembersOfGroup(ObjectId groupId){
+    public List<UserInfoResponse> getMembersOfGroup(ObjectId groupId){
         try {
             Group group = groupsRepository.findById(groupId);
-            List<String> memberEmails = new ArrayList<>();
+            List<UserInfoResponse> members = new ArrayList<>();
             for(ObjectId memberId : group.getMembers()){
                 User member = userService.findById(memberId);
                 if(member != null) {
-                    memberEmails.add(member.getEmail());
+                    members.add(new UserInfoResponse(member.getName(), member.getLastName(), member.getEmail(), member.getId()));
                 }
             }
-            return memberEmails;
+            return members;
         }
         catch (Exception e){
             e.printStackTrace();

@@ -53,8 +53,8 @@ public class MessagesService {
         return null;
     }
 
-    public boolean sendMessageToFriend(String message, String receiver){
-        User user = authService.getAuthenticatedUser();
+    public Message sendMessageToFriend(String message, String receiver, String sender){
+        User user = userService.findByEmail(sender);
         User receiverUser = userService.findByEmail(receiver);
 
         System.out.println(receiverUser.getEmail());
@@ -62,46 +62,43 @@ public class MessagesService {
         if ((user != null) && (receiverUser != null)) {
             ObjectId receiverId = receiverUser.getId();
             if (user.getFriends().contains(receiverId)) {
-                System.out.println("inbaba");
                 try {
-                    messagesRepository.save(new Message(
+                    return messagesRepository.save(new Message(
                             message,
                             user.getId(),
                             receiverId,
                             false));
-                    return true;
                 }
                 catch (Exception e){
                     e.printStackTrace();
-                    return false;
+                    return null;
                 }
             }
             //Not friends
-            return false;
+            return null;
         }
         //User was null
-        return false;
+        return null;
     }
 
-    public boolean sendMessageToGroup(String message, ObjectId groupId){
-        User user = authService.getAuthenticatedUser();
+    public Message sendMessageToGroup(String message, ObjectId groupId,String sender){
+        User user = userService.findByEmail(sender);
 
         if ((user != null)) {
             try {
-                messagesRepository.save(new Message(
+                return messagesRepository.save(new Message(
                         message,
                         user.getId(),
                         groupId,
                         true));
-                return true;
             }
             catch (Exception e){
                 e.printStackTrace();
-                return false;
+                return null;
             }
         }
         //User was null
-        return false;
+        return null;
     }
 
     public List<UniqueChats> getUniqueChatsWithDetails() {
@@ -145,6 +142,6 @@ public class MessagesService {
 
     public List<Message> getMessagesFromChat(ObjectId participant){
         User user = authService.getAuthenticatedUser();
-        return messagesRepository.findMessagesBetweenUsers(user.getId(),participant);
+        return messagesRepository.findMessagesBetweenUsers(user.getId(),participant).reversed();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.messagesAPI.service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -52,15 +53,15 @@ public class JWTService {
         }
     }
 
-    public boolean validateJWT(String token) {
+    public Claims validateToken(String token) {
         try {
-            Jwts.parserBuilder()
+            return Jwts.parserBuilder()
                     .setSigningKey(SECRET_KEY)
                     .build()
-                    .parseClaimsJws(token);
-            return true;
+                    .parseClaimsJws(token)
+                    .getBody();
         } catch (Exception e) {
-            return false;
+            return null;
         }
     }
 }

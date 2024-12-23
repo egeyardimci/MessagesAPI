@@ -42,15 +42,6 @@ public class GroupsController {
         return ResponseEntity.badRequest().body(new ErrorResponse("Failed to add user to group!"));
     }
 
-    @PostMapping("/groups/{groupId}/send")
-    public ResponseEntity<?> sendMessage(@PathVariable("groupId") ObjectId groupId, @RequestBody SendGroupMessageRequest sendGroupMessageRequest)
-    {
-        if(messagesService.sendMessageToGroup(sendGroupMessageRequest.content(),groupId)){
-            return ResponseEntity.ok(new SuccessResponse("Message successfully sent to the group!"));
-        }
-        return ResponseEntity.badRequest().body(new ErrorResponse("Failed to send message to group!"));
-    }
-
     @GetMapping("/groups/{groupId}/messages")
     public ResponseEntity<?> getMessages(@PathVariable("groupId") ObjectId groupId)
     {

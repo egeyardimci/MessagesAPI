@@ -25,6 +25,6 @@ public record ChatPairKey(ObjectId user1, ObjectId user2) {
 
     @Override
     public int hashCode() {
-        return Objects.hash(user1, user2);
+        return Objects.hash(user1.toString(), user2.toString());
     }
 }

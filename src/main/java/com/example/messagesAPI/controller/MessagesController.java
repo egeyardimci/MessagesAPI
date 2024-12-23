@@ -45,15 +45,4 @@ public class MessagesController {
         }
         return ResponseEntity.badRequest().body(new ErrorResponse("Failed retrieve messages!"));
     }
-
-    @PostMapping("/messages/send")
-    public ResponseEntity<?> sendMessage(@RequestBody SendMessageRequest sendMessageRequest) {
-
-        if(messagesService.sendMessageToFriend(sendMessageRequest.content(),sendMessageRequest.receiver())){
-            return ResponseEntity.ok(new SuccessResponse("Message successfully sent!"));
-        }
-        else{
-            return ResponseEntity.badRequest().body(new ErrorResponse("Failed to send message!"));
-        }
-    }
 }

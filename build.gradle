@@ -33,6 +33,10 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	implementation "org.springframework.boot:spring-boot-starter-security"
 
+	// Socket.IO Implementation
+	implementation 'com.corundumstudio.socketio:netty-socketio:2.0.3'
+
+
 
 }
 

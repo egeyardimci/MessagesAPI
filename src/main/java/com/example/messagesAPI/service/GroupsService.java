@@ -1,8 +1,11 @@
 package com.example.messagesAPI.service;
 
+import com.example.messagesAPI.dto.user.UserInfoResponse;
 import com.example.messagesAPI.model.Group;
+import com.example.messagesAPI.model.Message;
 import com.example.messagesAPI.model.User;
 import com.example.messagesAPI.repository.GroupsRepository;
+import com.example.messagesAPI.repository.MessagesRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,8 @@ public class GroupsService {
 
     @Autowired
     GroupsRepository groupsRepository;
+    @Autowired
+    MessagesRepository messagesRepository;
     @Autowired
     UserService userService;
 
@@ -56,20 +61,36 @@ public class GroupsService {
         return false;
     }
 
-    public List<String> getMembersOfGroup(ObjectId groupId){
+    public List<UserInfoResponse> getMembersOfGroup(ObjectId groupId){
         try {
             Group group = groupsRepository.findById(groupId);
-            List<String> memberEmails = new ArrayList<>();
+            List<UserInfoResponse> members = new ArrayList<>();
             for(ObjectId memberId : group.getMembers()){
                 User member = userService.findById(memberId);
                 if(member != null) {
-                    memberEmails.add(member.getEmail());
+                    members.add(new UserInfoResponse(member.getName(), member.getLastName(), member.getEmail(), member.getId()));
                 }
             }
-            return memberEmails;
+            return members;
         }
         catch (Exception e){
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<Group> filterGroupsByUser(ObjectId uid){
+        try {
+            return groupsRepository.findByMemberId(uid);
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+    public Message getLastMessageInGroup(ObjectId gid){
+        try {
+            return messagesRepository.findFirstByReceiverOrderByTimestampDesc(gid);
+        }catch (Exception e){
             return null;
         }
     }

@@ -126,6 +126,9 @@ dependencies {
 
 	testImplementation 'org.testcontainers:testcontainers:1.19.0'
 	testImplementation 'org.testcontainers:mongodb:1.19.0'
+  
+	// Socket.IO Implementation
+	implementation 'com.corundumstudio.socketio:netty-socketio:2.0.3'
 
 
 }

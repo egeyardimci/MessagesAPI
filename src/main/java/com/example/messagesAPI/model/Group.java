@@ -16,6 +16,7 @@ public class Group {
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
     private String name;
+    @JsonSerialize(contentUsing = ToStringSerializer.class)
     private List<ObjectId> members;
 
     public Group(String name,List<ObjectId> members){

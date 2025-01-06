@@ -3,6 +3,7 @@ package com.example.messagesAPI.controller;
 import com.example.messagesAPI.dto.ErrorResponse;
 import com.example.messagesAPI.dto.SuccessResponse;
 import com.example.messagesAPI.dto.group.*;
+import com.example.messagesAPI.dto.user.UserInfoResponse;
 import com.example.messagesAPI.model.Message;
 import com.example.messagesAPI.service.GroupsService;
 import com.example.messagesAPI.service.MessagesService;
@@ -41,15 +42,6 @@ public class GroupsController {
         return ResponseEntity.badRequest().body(new ErrorResponse("Failed to add user to group!"));
     }
 
-    @PostMapping("/groups/{groupId}/send")
-    public ResponseEntity<?> sendMessage(@PathVariable("groupId") ObjectId groupId, @RequestBody SendGroupMessageRequest sendGroupMessageRequest)
-    {
-        if(messagesService.sendMessageToGroup(sendGroupMessageRequest.content(),groupId)){
-            return ResponseEntity.ok(new SuccessResponse("Message successfully sent to the group!"));
-        }
-        return ResponseEntity.badRequest().body(new ErrorResponse("Failed to send message to group!"));
-    }
-
     @GetMapping("/groups/{groupId}/messages")
     public ResponseEntity<?> getMessages(@PathVariable("groupId") ObjectId groupId)
     {
@@ -64,7 +56,7 @@ public class GroupsController {
     @GetMapping("/groups/{groupId}/members")
     public ResponseEntity<?> getMembers(@PathVariable("groupId") ObjectId groupId)
     {
-        List<String> groupMembers = groupsService.getMembersOfGroup(groupId);
+        List<UserInfoResponse> groupMembers = groupsService.getMembersOfGroup(groupId);
 
         if(groupMembers != null){
             return ResponseEntity.ok(new GetGroupMembersResponse(groupMembers));

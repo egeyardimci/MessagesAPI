@@ -2,10 +2,12 @@ package com.example.messagesAPI.controller;
 
 import com.example.messagesAPI.dto.ErrorResponse;
 import com.example.messagesAPI.dto.SuccessResponse;
+import com.example.messagesAPI.dto.message.GetMessageRequest;
 import com.example.messagesAPI.dto.message.GetMessagesResponse;
 import com.example.messagesAPI.dto.message.SendMessageRequest;
 import com.example.messagesAPI.model.Message;
 import com.example.messagesAPI.service.MessagesService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +24,7 @@ public class MessagesController {
     MessagesService messagesService;
 
     @GetMapping("/messages")
-    public ResponseEntity<?> getMessages()
+    public ResponseEntity<?> messages()
     {
         List<Message> messages = messagesService.getMessages();
 
@@ -32,14 +34,15 @@ public class MessagesController {
         return ResponseEntity.badRequest().body(new ErrorResponse("Failed retrieve messages!"));
     }
 
-    @PostMapping("/messages/send")
-    public ResponseEntity<?> sendMessage(@RequestBody SendMessageRequest sendMessageRequest) {
+    @PostMapping("/messages/get")
+    public ResponseEntity<?> getMessages(@RequestBody GetMessageRequest getMessageRequest)
+    {
+        ObjectId participantId = new ObjectId(getMessageRequest.participant());
+        List<Message> messages = messagesService.getMessagesFromChat(participantId);
 
-        if(messagesService.sendMessageToFriend(sendMessageRequest.content(),sendMessageRequest.receiver())){
-            return ResponseEntity.ok(new SuccessResponse("Message successfully sent!"));
+        if(messages != null){
+            return ResponseEntity.ok(new GetMessagesResponse(messages));
         }
-        else{
-            return ResponseEntity.badRequest().body(new ErrorResponse("Failed to send message!"));
-        }
+        return ResponseEntity.badRequest().body(new ErrorResponse("Failed retrieve messages!"));
     }
 }

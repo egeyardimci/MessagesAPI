@@ -57,8 +57,6 @@ public class MessagesService {
         User user = userService.findByEmail(sender);
         User receiverUser = userService.findByEmail(receiver);
 
-        System.out.println(receiverUser.getEmail());
-
         if ((user != null) && (receiverUser != null)) {
             ObjectId receiverId = receiverUser.getId();
             if (user.getFriends().contains(receiverId)) {

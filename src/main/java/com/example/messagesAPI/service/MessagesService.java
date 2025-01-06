@@ -67,7 +67,7 @@ public class MessagesService {
                             message,
                             user.getId(),
                             receiverId,
-                            false));
+                            false,""));
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -90,7 +90,8 @@ public class MessagesService {
                         message,
                         user.getId(),
                         groupId,
-                        true));
+                        true,
+                        user.getName()));
             }
             catch (Exception e){
                 e.printStackTrace();

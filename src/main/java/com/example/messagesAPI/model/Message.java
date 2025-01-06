@@ -21,12 +21,14 @@ public class Message {
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId receiver;
     private boolean isGroupMessage;
+    private String senderName;
 
-    public Message(String content, ObjectId sender, ObjectId receiver,boolean isGroupMessage){
+    public Message(String content, ObjectId sender, ObjectId receiver,boolean isGroupMessage,String senderName){
         this.content = content;
         this.sender = sender;
         this.receiver = receiver;
         this.isGroupMessage = isGroupMessage;
         this.timestamp = new Timestamp(System.currentTimeMillis());
+        this.senderName = senderName;
     }
 }

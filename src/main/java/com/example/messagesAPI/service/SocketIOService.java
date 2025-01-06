@@ -122,6 +122,7 @@ public class SocketIOService {
                     else{
                         hashValue = message.receiverId().hashCode();
                     }
+                    System.out.println("HASH VALUE: " + hashValue);
                     Message finalSavedMessage = savedMessage;
                     connectedClients.get(hashValue).forEach(chatClient -> {
                         chatClient.sendEvent("message", finalSavedMessage);

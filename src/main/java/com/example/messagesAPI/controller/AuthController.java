@@ -42,8 +42,8 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new ErrorResponse("Invalid credentials!"));
         }
         else{
-        String token = jwtService.createJWT(loginRequest.email());
-        return ResponseEntity.ok(new LoginResponse(token));
+            String token = jwtService.createJWT(loginRequest.email());
+            return ResponseEntity.ok(new LoginResponse(token));
         }
     }
 

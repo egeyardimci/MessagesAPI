@@ -3,6 +3,83 @@ plugins {
 	id 'org.springframework.boot' version '3.3.5'
 	id 'io.spring.dependency-management' version '1.1.6'
 	id "io.freefair.lombok" version "8.10.2"
+	id 'jacoco'
+}
+
+jacoco {
+	toolVersion = "0.8.11"
+}
+
+test {
+	testLogging {
+		events "passed", "skipped", "failed"
+		exceptionFormat "full"
+		showStandardStreams = false
+
+		// Add timing information
+		showExceptions true
+		showCauses true
+		showStackTraces true
+		displayGranularity = 2
+
+		afterTest { desc, result ->
+			def time = (result.endTime - result.startTime) / 1000
+			logger.lifecycle("\n${desc.name} took ${time} seconds")
+		}
+
+		afterSuite { desc, result ->
+			if (!desc.parent) { // will match the outermost suite
+				def output = "Results: ${result.resultType} " +
+						"(${result.testCount} tests, " +
+						"${result.successfulTestCount} passed, " +
+						"${result.failedTestCount} failed, " +
+						"${result.skippedTestCount} skipped) " +
+						"in ${(result.endTime - result.startTime) / 1000} seconds"
+				println '\n' + output + '\n'
+			}
+		}
+	}
+
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.required = true
+		csv.required = false
+		html.required = true
+		html.outputLocation = layout.buildDirectory.dir('reports/jacoco')
+	}
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.8
+			}
+		}
+
+		rule {
+			enabled = false
+			element = 'CLASS'
+			includes = ['com.example.*']
+
+			limit {
+				counter = 'LINE'
+				value = 'COVEREDRATIO'
+				minimum = 0.8
+			}
+
+			limit {
+				counter = 'BRANCH'
+				value = 'COVEREDRATIO'
+				minimum = 0.8
+			}
+		}
+	}
 }
 
 group = 'com.example'
@@ -23,6 +100,20 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// JUnit 5 (Jupiter) dependencies
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+
+	// Testcontainers core dependency
+	testImplementation 'org.testcontainers:testcontainers:1.19.0'
+
+	// Testcontainers JUnit Jupiter integration
+	testImplementation 'org.testcontainers:junit-jupiter:1.19.0'
+
+	// MongoDB Testcontainers dependency
+	testImplementation 'org.testcontainers:mongodb:1.19.0'
+
 	compileOnly 'org.projectlombok:lombok:1.18.34'
 	annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
@@ -33,9 +124,11 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	implementation "org.springframework.boot:spring-boot-starter-security"
 
+	testImplementation 'org.testcontainers:testcontainers:1.19.0'
+	testImplementation 'org.testcontainers:mongodb:1.19.0'
+  
 	// Socket.IO Implementation
 	implementation 'com.corundumstudio.socketio:netty-socketio:2.0.3'
-
 
 
 }

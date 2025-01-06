@@ -7,7 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class MessagesApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void Test_ContextLoads() {
 	}
+
 
 }

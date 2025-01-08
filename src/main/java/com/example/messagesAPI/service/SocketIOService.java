@@ -51,6 +51,8 @@ public class SocketIOService {
             user = userService.findByEmail(client.getHandshakeData().getHttpHeaders().get("email"));
             System.out.println(user);
             System.out.println(client.getHandshakeData().getHttpHeaders().get("email"));
+            System.out.println(client.getHandshakeData().getHttpHeaders().get("receiverId"));
+            System.out.println(client.getHandshakeData().getHttpHeaders().get("isGroup"));
 
             String receiverId = client.getHandshakeData().getSingleUrlParam("receiverId");
             boolean isGroup = Boolean.parseBoolean(client.getHandshakeData().getSingleUrlParam("isGroup"));
@@ -105,11 +107,12 @@ public class SocketIOService {
         server.addEventListener("message", SendMessageRequest.class,
                 (client, message, ackRequest) -> {
                     //save message to db
+                    user = userService.findByEmail(client.getHandshakeData().getHttpHeaders().get("email"));
                     Message savedMessage = null;
                     if(message.groupMessage()){
-                        savedMessage = messagesService.sendMessageToGroup(message.content(), new ObjectId(message.receiverId()), message.sender());
+                        savedMessage = messagesService.sendMessageToGroup(message.content(), new ObjectId(message.receiverId()), user.getEmail());
                     } else {
-                        savedMessage  = messagesService.sendMessageToFriend(message.content(), message.receiver(),message.sender());
+                        savedMessage  = messagesService.sendMessageToFriend(message.content(), message.receiver(),user.getEmail());
                     }
                     //forward message to socket
                     int hashValue = 0;

@@ -129,6 +129,7 @@ dependencies {
   
 	// Socket.IO Implementation
 	implementation 'com.corundumstudio.socketio:netty-socketio:2.0.3'
+	testImplementation 'io.socket:socket.io-client:2.1.0'
 
 
 }

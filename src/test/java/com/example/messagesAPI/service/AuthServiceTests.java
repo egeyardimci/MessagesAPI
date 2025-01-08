@@ -1,22 +1,26 @@
 package com.example.messagesAPI.service;
 
-import com.example.messagesAPI.model.Message;
+import com.example.messagesAPI.TestSocketIOConfig;
 import com.example.messagesAPI.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+
+@ExtendWith(MockitoExtension.class)
 public class AuthServiceTests {
 
     @Mock
@@ -110,7 +114,6 @@ public class AuthServiceTests {
 
         // Simulate successful save
         when(authentication.isAuthenticated()).thenReturn(false);
-        when(authentication.getPrincipal()).thenReturn(user);
         User result = authService.getAuthenticatedUser();
 
         //Check result

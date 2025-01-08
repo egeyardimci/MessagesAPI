@@ -1,19 +1,22 @@
 package com.example.messagesAPI.controller;
 
-import com.example.messagesAPI.dto.auth.RegisterRequest;
+import com.example.messagesAPI.TestSocketIOConfig;
+import com.example.messagesAPI.dto.message.GetMessageRequest;
 import com.example.messagesAPI.dto.message.SendMessageRequest;
 import com.example.messagesAPI.model.Message;
-import com.example.messagesAPI.service.AuthService;
 import com.example.messagesAPI.service.JWTService;
 import com.example.messagesAPI.service.MessagesService;
+import com.example.messagesAPI.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -25,8 +28,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(MessagesController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class MessagesControllerTests {
     @Autowired
     MockMvc mockMvc;
@@ -34,85 +37,58 @@ public class MessagesControllerTests {
     @MockBean
     MessagesService messagesService;
 
-    @Autowired
+    @MockBean
+    private UserService userService;
+
+    @MockBean
     JWTService jwtService;
 
     @Test
-    void Test_GetMessages_Success() throws Exception {
+    void Test_GetChatMessages_Success() throws Exception {
         //Setup
+        ObjectId mockId = new ObjectId("507f1f77bcf86cd799439011");
         List<Message> messages = new ArrayList<>();
         String token = jwtService.createJWT("test");
 
-        when(messagesService.getMessages()).thenReturn(messages);
+        when(messagesService.getMessagesFromChat(mockId)).thenReturn(messages);
+
+        GetMessageRequest getMessageRequest = new GetMessageRequest(mockId.toString());
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(getMessageRequest);
 
         // Act & Assert
-        mockMvc.perform(get("/messages")
-                .header("Authorization", "Bearer " + token))
+        mockMvc.perform(post("/messages/get")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
                 .andExpect(status().isOk());
 
         // Verify the service method was called
-        verify(messagesService, times(1)).getMessages();
+        verify(messagesService, times(1)).getMessagesFromChat(mockId);
     }
 
     @Test
-    void Test_GetMessages_Error() throws Exception {
+    void Test_GetChatMessages_Error() throws Exception {
         //Setup
+        ObjectId mockId = new ObjectId("507f1f77bcf86cd799439011");
         List<Message> messages = new ArrayList<>();
         String token = jwtService.createJWT("test");
 
-        when(messagesService.getMessages()).thenReturn(null);
+        when(messagesService.getMessagesFromChat(mockId)).thenReturn(null);
+
+        GetMessageRequest getMessageRequest = new GetMessageRequest(mockId.toString());
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(getMessageRequest);
 
         // Act & Assert
-        mockMvc.perform(get("/messages")
-                        .header("Authorization", "Bearer " + token))
+        mockMvc.perform(post("/messages/get")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
                 .andExpect(status().isBadRequest());
 
         // Verify the service method was called
-        verify(messagesService, times(1)).getMessages();
-    }
-
-    @Test
-    void Test_SendMessage_Success() throws Exception {
-        //Setup
-        SendMessageRequest sendMessageRequest = new SendMessageRequest("test","test");
-        String token = jwtService.createJWT("test");
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String messageJson = objectMapper.writeValueAsString(sendMessageRequest);
-
-        when(messagesService.sendMessageToFriend(sendMessageRequest.content(),sendMessageRequest.receiver())).thenReturn(true);
-
-        // Act & Assert
-        mockMvc.perform(post("/messages/send")
-                .header("Authorization", "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(messageJson))
-                .andExpect(status().isOk());
-
-        // Verify the service method was called
-        verify(messagesService, times(1)).sendMessageToFriend(sendMessageRequest.content(),sendMessageRequest.receiver());
-    }
-
-    @Test
-    void Test_SendMessage_Error() throws Exception {
-        //Setup
-        SendMessageRequest sendMessageRequest = new SendMessageRequest("test","test");
-        String token = jwtService.createJWT("test");
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String messageJson = objectMapper.writeValueAsString(sendMessageRequest);
-
-        when(messagesService.sendMessageToFriend(sendMessageRequest.content(),sendMessageRequest.receiver())).thenReturn(false);
-
-        // Act & Assert
-        mockMvc.perform(post("/messages/send")
-                .header("Authorization", "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(messageJson))
-                .andExpect(status().isBadRequest());
-
-        // Verify the service method was called
-        verify(messagesService, times(1)).sendMessageToFriend(sendMessageRequest.content(),sendMessageRequest.receiver());
+        verify(messagesService, times(1)).getMessagesFromChat(mockId);
     }
 
 }

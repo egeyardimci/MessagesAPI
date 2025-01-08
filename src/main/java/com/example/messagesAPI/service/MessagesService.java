@@ -53,7 +53,8 @@ public class MessagesService {
         return null;
     }
 
-    public Message sendMessageToFriend(String message, String receiver, String sender){
+    public Message sendMessageToFriend(String content, String receiver, String sender){
+        System.out.println("TRYING TO SEND MESSAGEEEEEEEEEEEEEEEEEEEE");
         User user = userService.findByEmail(sender);
         User receiverUser = userService.findByEmail(receiver);
 
@@ -61,14 +62,16 @@ public class MessagesService {
             ObjectId receiverId = receiverUser.getId();
             if (user.getFriends().contains(receiverId)) {
                 try {
-                    return messagesRepository.save(new Message(
-                            message,
+                    Message message = messagesRepository.save(new Message(
+                            content,
                             user.getId(),
                             receiverId,
                             false,""));
+                    return message;
                 }
                 catch (Exception e){
                     e.printStackTrace();
+                    System.out.println("Error sending message: " + e.getMessage());
                     return null;
                 }
             }
@@ -79,13 +82,13 @@ public class MessagesService {
         return null;
     }
 
-    public Message sendMessageToGroup(String message, ObjectId groupId,String sender){
+    public Message sendMessageToGroup(String content, ObjectId groupId,String sender){
         User user = userService.findByEmail(sender);
 
         if ((user != null)) {
             try {
                 return messagesRepository.save(new Message(
-                        message,
+                        content,
                         user.getId(),
                         groupId,
                         true,

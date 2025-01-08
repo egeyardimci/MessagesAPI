@@ -5,27 +5,25 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import com.example.messagesAPI.TestSocketIOConfig;
 import com.example.messagesAPI.dto.auth.LoginRequest;
 import com.example.messagesAPI.dto.auth.RegisterRequest;
-import com.example.messagesAPI.model.User;
 import com.example.messagesAPI.service.AuthService;
 import com.example.messagesAPI.service.JWTService;
-import org.junit.jupiter.api.BeforeEach;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
+import com.example.messagesAPI.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(AuthController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class AuthControllerTests {
 
     @Autowired
@@ -33,6 +31,9 @@ public class AuthControllerTests {
 
     @MockBean
     AuthService authService;
+
+    @MockBean
+    private UserService userService;
 
     @MockBean
     JWTService jwtService;
